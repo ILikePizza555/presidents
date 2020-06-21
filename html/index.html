@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Presidents</title>
+        <meta charset="utf-8">
+    </head>
+    <body>
+        <h1>Create new game:</h1>
+        <form action="/game" method="POST">
+            <div>
+                <label for="game_name">Game name:</label>
+                <input type="text" name="game_name">
+            </div>
+            <div>
+                <label for="allow_bots">Enable bots?</label>
+                <input type="checkbox" name="allow_bots">
+            </div>
+            <input type="submit" value="Create Game">
+        </form>
+    </body>
+</html>
