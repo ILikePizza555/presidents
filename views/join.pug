@@ -1,0 +1,11 @@
+extends base.pug
+
+block content
+    div.flex-row.flex-center
+        div
+            h1 Join Game:
+            form(action=#{game_url} method=POST)
+                div
+                    label(for="player_name") Player name:
+                    input(type="text" name="player_name")
+                input(type="submit" value="Join!")

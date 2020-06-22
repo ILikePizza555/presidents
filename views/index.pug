@@ -1,0 +1,14 @@
+extends base.pug
+
+block content
+    div.flex-row.flex-center
+        div
+            h1 Create new game:
+            form(action="/game" method="POST")
+                div
+                    label(for="game_name") Game name:
+                    input(type="text" name="game_name")
+                div
+                    label(for="allow_bots") Allow bots
+                    input(type="checkbox" name="allow_bots")
+                input(type="submit" value="Create game!")

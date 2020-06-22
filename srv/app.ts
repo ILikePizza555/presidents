@@ -15,6 +15,7 @@ function CreateGame(creator_id: string, name?: string) {
 }
 
 const app = express()
+app.set("view engine", "pug")
 app.use(bodyParser.urlencoded({extended: true}))
 app.use(expressSession({
     secret: SessionSecret(),
@@ -23,11 +24,14 @@ app.use(expressSession({
 app.use("/static", express.static("static_assets"))
 
 app.get("/", (req, res) => {
-    res.sendFile("./html/index.html", {root: process.cwd()})
+    res.render("index", {pageTitle: "Presidents - Create Game"})
 })
 
 app.get("/join/:game_id", (req, res) => {
-    res.sendFile("./html/join.html", {root: process.cwd()})
+    res.render("join", {
+        pageTitle: "Joining game",
+        game_url: "/game/" + req.params.game_id
+    })
 })
 
 // Create a new game object
