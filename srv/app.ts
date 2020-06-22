@@ -19,7 +19,9 @@ app.set("view engine", "pug")
 app.use(bodyParser.urlencoded({extended: true}))
 app.use(expressSession({
     secret: SessionSecret(),
-    genid: _ => uuid.v4()
+    genid: _ => uuid.v4(),
+    resave: true,
+    saveUninitialized: true
 }))
 app.use("/static", express.static("static_assets"))
 
