@@ -34,15 +34,15 @@ app.get("/", (req, res) => {
 app.get("/join/:game_id", (req, res) => {
     res.render("join", {
         pageTitle: "Joining game",
-        game_url: "/game/" + req.params.game_id
+        game_url: "/join/" + req.params.game_id
     })
 })
 
 app.get("/game/:game_id", (req, res) => {
     const game_data = GameStore.get(req.params.game_id)
     const player = PlayerStore.get(req.session.id)
-    res.send(`player name: ${player.player_name}
-        game name: ${game_data.game_name}`)
+    res.send(`<p>player name: ${player.player_name}
+        <p>game name: ${game_data.game_name}`)
 })
 
 // Create a new game object
