@@ -39,7 +39,10 @@ app.get("/join/:game_id", (req, res) => {
 })
 
 app.get("/game/:game_id", (req, res) => {
-
+    const game_data = GameStore.get(req.params.game_id)
+    const player = PlayerStore.get(req.session.id)
+    res.send(`player name: ${player.player_name}
+        game name: ${game_data.game_name}`)
 })
 
 // Create a new game object
@@ -50,7 +53,10 @@ app.post("/game", (req, res) => {
 
 // Player object is created and added to the game
 app.post("/join/:game_id", (req, res) => {
-
+    PlayerStore.set(req.session.id, new PlayerData(req.session.id, req.body.player_name))
+    GameStore.get(req.params.game_id).players.push(req.session.id)
+    
+    res.redirect("/game/" + req.params.game_id)
 })
 
 const server = http.createServer(app).listen(8000);
