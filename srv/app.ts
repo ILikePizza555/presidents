@@ -5,8 +5,10 @@ import * as http from "http"
 import * as uuid from "uuid"
 import { SessionSecret } from "./env"
 import GameData from "./GameData"
+import PlayerData from "./PlayerData"
 
 const GameStore = new Map<string, GameData>()
+const PlayerStore = new Map<string, PlayerData>()
 
 function CreateGame(creator_id: string, name?: string) {
     const new_game = new GameData(creator_id, name)
@@ -34,6 +36,10 @@ app.get("/join/:game_id", (req, res) => {
         pageTitle: "Joining game",
         game_url: "/game/" + req.params.game_id
     })
+})
+
+app.get("/game/:game_id", (req, res) => {
+
 })
 
 // Create a new game object
