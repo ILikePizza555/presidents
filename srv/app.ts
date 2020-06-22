@@ -39,6 +39,11 @@ app.get("/join/:game_id", (req, res) => {
 })
 
 app.get("/game/:game_id", (req, res) => {
+    if (!GameStore.has(req.params.game_id)) {
+        res.status(404).send("Game not found")
+        return
+    }
+
     const game_data = GameStore.get(req.params.game_id)
     const player = PlayerStore.get(req.session.id)
     res.send(`<p>player name: ${player.player_name}
