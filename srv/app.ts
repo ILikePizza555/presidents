@@ -11,6 +11,11 @@ const GameStore = new Map<string, GameData>()
 const PlayerStore = new Map<string, PlayerData>()
 
 function CreateGame(creator_id: string, name?: string) {
+    // Ensure that a game's creator always exists in the PlayerStore
+    if (!PlayerStore.has(creator_id)) {
+        PlayerStore.set(creator_id, new PlayerData(creator_id))
+    }
+
     const new_game = new GameData(creator_id, name)
     GameStore.set(new_game.game_id, new_game)
     return new_game.game_id
