@@ -37,36 +37,59 @@ app.get("/", (req, res) => {
 })
 
 app.get("/join/:game_id", (req, res) => {
-    res.render("join", {
-        pageTitle: "Joining game",
-        game_url: "/join/" + req.params.game_id
-    })
+    const game_id = req.params["game_id"]
+    const game = GameStore.get(game_id)
+
+    if (game) {
+        res.render("join", {
+            pageTitle: "Joining game",
+            game_url: "/join/" + req.params.game_id
+        })
+    } else {
+        res.status(404).send("404 Not found.")
+    }
 })
 
 app.get("/game/:game_id", (req, res) => {
-    if (!GameStore.has(req.params.game_id)) {
-        res.status(404).send("Game not found")
-        return
-    }
+    const game_id = req.params["game_id"]
+    const game = GameStore.get(game_id)
+    const player = PlayerStore.get(req.sessionID!)
 
-    const game_data = GameStore.get(req.params.game_id)
-    const player = PlayerStore.get(req.session.id)
-    res.send(`<p>player name: ${player.player_name}
-        <p>game name: ${game_data.game_name}`)
+    if (game && player) {
+        res.send(`<p>player name: ${player.player_name}
+            <p>game name: ${game.game_name}`)
+    } else if (!player) {
+        res.redirect(`/join/${game_id}`)
+    } else {
+        res.status(404).send("404 Not found.")
+    }
 })
 
 // Create a new game object
 app.post("/game", (req, res) => {
     const new_game_id = CreateGame(req.session.id, req.body.game_name)
-    res.redirect("/join/" + new_game_id)
+    res.redirect(`/join/${new_game_id}`)
 })
 
 // Player object is created and added to the game
 app.post("/join/:game_id", (req, res) => {
-    PlayerStore.set(req.session.id, new PlayerData(req.session.id, req.body.player_name))
-    GameStore.get(req.params.game_id).players.push(req.session.id)
-    
-    res.redirect("/game/" + req.params.game_id)
+    const game_id = req.params["game_id"]
+    const player = PlayerStore.get(req.sessionID!)
+    const game = GameStore.get(game_id)
+
+    if (!game) {
+        res.status(404).send("404 Not found.")
+        return
+    }
+
+    if (!player) {
+        PlayerStore.set(req.sessionID!, new PlayerData(req.sessionID!, req.body.player_name))
+    } else if (!player.player_name) {
+        player.player_name = req.body.player_name
+    }
+
+    game.players.add(req.sessionID)
+    res.redirect(`/game/${game_id}`)
 })
 
 const server = http.createServer(app).listen(8000);
